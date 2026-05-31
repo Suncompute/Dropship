@@ -1,0 +1,17 @@
+[package]
+name    = "dropship-core"
+version.workspace = true
+edition.workspace = true
+
+[package.metadata.daidalos]
+language = "rust"
+layer    = 1.0
+purpose  = "Domain Entities, Game Logic, Business Rules"
+patterns = ["HEXAGONAL", "DOMAIN_MODEL"]
+rules    = ["NO_UNWRAP", "NO_PANIC"]
+
+[package.metadata.daidalos.doc]
+output = "docs/generated/core.md"
+canvas = "docs/generated/core.canvas"
+
+[dependencies]

@@ -1,0 +1,29 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/dropship-core",
+    "crates/dropship-ports",
+    "crates/dropship-wasm"
+]
+
+[workspace.package]
+version   = "0.1.0"
+edition   = "2021"
+license   = "MIT"
+authors   = [""]
+repository = ""
+
+[workspace.metadata.daidalos]
+architecture = "hexagonal"
+layers = [
+    { id = "core", level = 1.0, name = "Domain Logic" },
+    { id = "ports", level = 2.0, name = "Ports & Adapters" },
+    { id = "wasm", level = 3.0, name = "WASM / Browser" },
+]
+
+[workspace.dependencies]
+serde      = { version = "1", features = ["derive"] }
+serde_json = "1"
+tokio      = { version = "1", features = ["full"] }
+thiserror  = "2"
+anyhow     = "1"

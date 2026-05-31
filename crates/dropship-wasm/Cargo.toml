@@ -1,0 +1,17 @@
+[package]
+name    = "dropship-wasm"
+version.workspace = true
+edition.workspace = true
+
+[package.metadata.daidalos]
+language = "rust"
+layer    = 3.0
+purpose  = "WASM Entry-Point, WebGL Adapter, Browser Glue"
+patterns = ["ADAPTER"]
+rules    = ["NO_PANIC"]
+
+[package.metadata.daidalos.doc]
+output = "docs/generated/wasm.md"
+canvas = "docs/generated/wasm.canvas"
+
+[dependencies]

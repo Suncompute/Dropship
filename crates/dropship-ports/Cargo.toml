@@ -1,0 +1,17 @@
+[package]
+name    = "dropship-ports"
+version.workspace = true
+edition.workspace = true
+
+[package.metadata.daidalos]
+language = "rust"
+layer    = 2.0
+purpose  = "Port Traits (Renderer, Input, Audio, ...)"
+patterns = ["PORT", "INTERFACE"]
+rules    = ["NO_UNWRAP"]
+
+[package.metadata.daidalos.doc]
+output = "docs/generated/ports.md"
+canvas = "docs/generated/ports.canvas"
+
+[dependencies]

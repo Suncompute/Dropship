@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120">
+  <defs>
+    <radialGradient id="engineGlow" cx="50%" cy="100%" r="40%">
+      <stop offset="0%" stop-color="#ff6a00" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#ff6a00" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="coreGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#00e5ff" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#00e5ff" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="2.5" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="softGlow">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Engine exhaust glow -->
+  <ellipse cx="60" cy="102" rx="18" ry="10" fill="url(#engineGlow)" opacity="0.8"/>
+
+  <!-- Engine nozzles -->
+  <rect x="44" y="88" width="8" height="14" rx="3" fill="#1a1a2e"/>
+  <rect x="68" y="88" width="8" height="14" rx="3" fill="#1a1a2e"/>
+
+  <!-- Engine flame -->
+  <ellipse cx="48" cy="103" rx="5" ry="7" fill="#ff6a00" opacity="0.7" filter="url(#glow)"/>
+  <ellipse cx="72" cy="103" rx="5" ry="7" fill="#ff6a00" opacity="0.7" filter="url(#glow)"/>
+  <ellipse cx="48" cy="101" rx="2.5" ry="4" fill="#ffe066" opacity="0.9"/>
+  <ellipse cx="72" cy="101" rx="2.5" ry="4" fill="#ffe066" opacity="0.9"/>
+
+  <!-- Main hull (shadow silhouette) -->
+  <polygon points="60,10 90,85 72,78 60,90 48,78 30,85" fill="#0d0d1a"/>
+
+  <!-- Hull detail — center spine -->
+  <polygon points="60,18 65,75 60,82 55,75" fill="#1a1a3e"/>
+
+  <!-- Wing panels -->
+  <polygon points="60,30 88,82 72,76" fill="#12122a" stroke="#1e1e4a" stroke-width="0.5"/>
+  <polygon points="60,30 32,82 48,76" fill="#12122a" stroke="#1e1e4a" stroke-width="0.5"/>
+
+  <!-- Wing edge highlight -->
+  <line x1="60" y1="30" x2="88" y2="82" stroke="#00e5ff" stroke-width="0.8" opacity="0.5" filter="url(#glow)"/>
+  <line x1="60" y1="30" x2="32" y2="82" stroke="#00e5ff" stroke-width="0.8" opacity="0.5" filter="url(#glow)"/>
+
+  <!-- Cockpit -->
+  <ellipse cx="60" cy="38" rx="7" ry="9" fill="#0a0a1f"/>
+  <ellipse cx="60" cy="36" rx="4" ry="6" fill="url(#coreGlow)" filter="url(#softGlow)"/>
+  <ellipse cx="60" cy="35" rx="3" ry="5" fill="#001a2e" stroke="#00e5ff" stroke-width="0.6" opacity="0.9"/>
+
+  <!-- Weapon hardpoints -->
+  <rect x="35" y="62" width="3" height="10" rx="1" fill="#0d0d1a" stroke="#00e5ff" stroke-width="0.4" opacity="0.8"/>
+  <rect x="82" y="62" width="3" height="10" rx="1" fill="#0d0d1a" stroke="#00e5ff" stroke-width="0.4" opacity="0.8"/>
+
+  <!-- Nose tip glow -->
+  <circle cx="60" cy="10" r="2" fill="#00e5ff" opacity="0.8" filter="url(#glow)"/>
+</svg>

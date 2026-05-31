@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Dropship — Asset Preview</title>
+  <style>
+    body { background: #000008; margin: 0; font-family: monospace; color: #aaa; }
+    h1 { color: #00e5ff; text-align: center; padding: 20px; font-size: 1.4em; letter-spacing: 4px; }
+    .scene {
+      position: relative;
+      width: 800px; height: 600px;
+      margin: 0 auto;
+      border: 1px solid #1a1a3a;
+      overflow: hidden;
+    }
+    .scene img.bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+    .scene img.planet { position: absolute; top: 60px; right: 80px; }
+    .scene img.ship {
+      position: absolute;
+      bottom: 100px; left: 50%;
+      transform: translateX(-50%);
+      animation: hover 3s ease-in-out infinite;
+    }
+    @keyframes hover {
+      0%, 100% { transform: translateX(-50%) translateY(0px); }
+      50%       { transform: translateX(-50%) translateY(-8px); }
+    }
+    .label {
+      position: absolute; font-size: 10px;
+      letter-spacing: 2px; color: #00e5ff88;
+    }
+    .label.ship-label { bottom: 80px; left: 50%; transform: translateX(-50%); }
+    .label.planet-label { top: 40px; right: 80px; }
+    .assets {
+      display: flex; gap: 40px;
+      justify-content: center; padding: 40px;
+      border-top: 1px solid #1a1a3a;
+    }
+    .asset { text-align: center; }
+    .asset p { font-size: 11px; letter-spacing: 2px; color: #555; margin-top: 8px; }
+  </style>
+</head>
+<body>
+  <h1>⬡ DROPSHIP</h1>
+
+  <div class="scene">
+    <img class="bg" src="svg/stars-bg.svg">
+    <img class="planet" src="svg/hostile-planet.svg" width="160">
+    <img class="ship" src="svg/dropship.svg" width="120">
+    <span class="label planet-label">HOSTILE PLANET</span>
+    <span class="label ship-label">DROPSHIP MK-I</span>
+  </div>
+
+  <div class="assets">
+    <div class="asset">
+      <img src="svg/dropship.svg" width="90">
+      <p>DROPSHIP.SVG</p>
+    </div>
+    <div class="asset">
+      <img src="svg/hostile-planet.svg" width="110">
+      <p>HOSTILE-PLANET.SVG</p>
+    </div>
+    <div class="asset" style="background:#060612; padding:10px; border:1px solid #111;">
+      <img src="svg/stars-bg.svg" width="200" height="150">
+      <p>STARS-BG.SVG</p>
+    </div>
+  </div>
+</body>
+</html>

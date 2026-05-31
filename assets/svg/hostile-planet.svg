@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" width="160" height="160">
+  <defs>
+    <radialGradient id="planetCore" cx="40%" cy="35%" r="60%">
+      <stop offset="0%" stop-color="#2a0a2e"/>
+      <stop offset="60%" stop-color="#0d0d0d"/>
+      <stop offset="100%" stop-color="#050505"/>
+    </radialGradient>
+    <radialGradient id="shieldGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="70%" stop-color="#8b00ff" stop-opacity="0"/>
+      <stop offset="90%" stop-color="#8b00ff" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#cc44ff" stop-opacity="0.1"/>
+    </radialGradient>
+    <radialGradient id="crackGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ff2200" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#ff2200" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="planetGlow">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="shieldBlur">
+      <feGaussianBlur stdDeviation="5"/>
+    </filter>
+    <clipPath id="planetClip">
+      <circle cx="80" cy="80" r="52"/>
+    </clipPath>
+  </defs>
+
+  <!-- Outer shield pulse ring -->
+  <circle cx="80" cy="80" r="74" fill="none" stroke="#8b00ff" stroke-width="1" opacity="0.2"/>
+  <circle cx="80" cy="80" r="70" fill="none" stroke="#8b00ff" stroke-width="0.5" opacity="0.3"/>
+
+  <!-- Shield glow layer -->
+  <circle cx="80" cy="80" r="66" fill="url(#shieldGlow)" filter="url(#shieldBlur)" opacity="0.6"/>
+
+  <!-- Shield ring -->
+  <ellipse cx="80" cy="80" rx="66" ry="18" fill="none" stroke="#8b00ff" stroke-width="1.5" opacity="0.6" filter="url(#planetGlow)"/>
+  <ellipse cx="80" cy="80" rx="60" ry="14" fill="none" stroke="#aa44ff" stroke-width="0.8" opacity="0.4"/>
+
+  <!-- Planet body -->
+  <circle cx="80" cy="80" r="52" fill="url(#planetCore)"/>
+
+  <!-- Surface texture — dark continents -->
+  <g clip-path="url(#planetClip)">
+    <ellipse cx="65" cy="60" rx="22" ry="14" fill="#1a0820" opacity="0.8"/>
+    <ellipse cx="95" cy="75" rx="18" ry="22" fill="#150618" opacity="0.7"/>
+    <ellipse cx="70" cy="100" rx="25" ry="12" fill="#1a0820" opacity="0.6"/>
+    <ellipse cx="55" cy="85" rx="12" ry="16" fill="#120515" opacity="0.5"/>
+
+    <!-- Lava cracks -->
+    <path d="M60,55 Q70,65 65,80 Q72,90 68,105" stroke="#ff2200" stroke-width="1.2" fill="none" opacity="0.7" filter="url(#planetGlow)"/>
+    <path d="M85,45 Q90,60 82,72 Q88,85 80,98" stroke="#ff3300" stroke-width="0.8" fill="none" opacity="0.5" filter="url(#planetGlow)"/>
+    <path d="M50,75 Q62,78 70,72 Q80,76 95,70" stroke="#cc1100" stroke-width="0.7" fill="none" opacity="0.4"/>
+    <path d="M68,105 Q75,95 90,100" stroke="#ff2200" stroke-width="0.6" fill="none" opacity="0.4"/>
+
+    <!-- Bright crack nodes -->
+    <circle cx="65" cy="80" r="2.5" fill="#ff4400" opacity="0.9" filter="url(#planetGlow)"/>
+    <circle cx="82" cy="72" r="2" fill="#ff3300" opacity="0.8" filter="url(#planetGlow)"/>
+    <circle cx="68" cy="105" r="1.5" fill="#ff5500" opacity="0.7" filter="url(#planetGlow)"/>
+
+    <!-- Atmosphere shimmer -->
+    <circle cx="80" cy="80" r="52" fill="none" stroke="#4a0060" stroke-width="4" opacity="0.3"/>
+  </g>
+
+  <!-- Planet rim light (subtle) -->
+  <circle cx="80" cy="80" r="52" fill="none" stroke="#6600aa" stroke-width="1" opacity="0.5" filter="url(#planetGlow)"/>
+
+  <!-- Shield ring segments (rotating feel) -->
+  <g opacity="0.7" filter="url(#planetGlow)">
+    <path d="M 16,72 A 66,18 0 0 1 80,62" fill="none" stroke="#cc66ff" stroke-width="2" stroke-dasharray="8,4"/>
+    <path d="M 80,98 A 66,18 0 0 1 144,88" fill="none" stroke="#9933cc" stroke-width="1.5" stroke-dasharray="6,6"/>
+  </g>
+
+  <!-- Awaken eye — center pulse -->
+  <circle cx="80" cy="80" r="8" fill="#0d0000" stroke="#ff2200" stroke-width="0.8" opacity="0.6"/>
+  <circle cx="80" cy="80" r="4" fill="#ff1100" opacity="0.4" filter="url(#planetGlow)"/>
+  <circle cx="80" cy="80" r="2" fill="#ff6600" opacity="0.8"/>
+</svg>

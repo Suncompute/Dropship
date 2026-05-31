@@ -1,75 +1,49 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600">
-  <!-- Dark paper background — nicht reines Schwarz, etwas Tiefe -->
-  <rect width="800" height="600" fill="#080810"/>
+  <!-- Weißer Hintergrund -->
+  <rect width="800" height="600" fill="#ffffff"/>
 
-  <!-- Subtle grid — sehr dezent, gibt dem Raum Struktur -->
-  <g stroke="#0f0f20" stroke-width="0.5" opacity="0.8">
-    <line x1="0" y1="100" x2="800" y2="100"/>
-    <line x1="0" y1="200" x2="800" y2="200"/>
-    <line x1="0" y1="300" x2="800" y2="300"/>
-    <line x1="0" y1="400" x2="800" y2="400"/>
-    <line x1="0" y1="500" x2="800" y2="500"/>
-    <line x1="100" y1="0" x2="100" y2="600"/>
-    <line x1="200" y1="0" x2="200" y2="600"/>
-    <line x1="300" y1="0" x2="300" y2="600"/>
-    <line x1="400" y1="0" x2="400" y2="600"/>
-    <line x1="500" y1="0" x2="500" y2="600"/>
-    <line x1="600" y1="0" x2="600" y2="600"/>
-    <line x1="700" y1="0" x2="700" y2="600"/>
+  <!-- Sterne — kleine schwarze Punkte -->
+  <g fill="#000000" opacity="0.15">
+    <circle cx="42"  cy="18"  r="2"/>
+    <circle cx="128" cy="55"  r="1.5"/>
+    <circle cx="89"  cy="140" r="2.5"/>
+    <circle cx="215" cy="28"  r="1.5"/>
+    <circle cx="310" cy="77"  r="2"/>
+    <circle cx="456" cy="12"  r="1.5"/>
+    <circle cx="589" cy="55"  r="2.5"/>
+    <circle cx="670" cy="130" r="1.5"/>
+    <circle cx="723" cy="44"  r="2"/>
+    <circle cx="150" cy="220" r="1.5"/>
+    <circle cx="267" cy="178" r="2"/>
+    <circle cx="390" cy="200" r="1.5"/>
+    <circle cx="512" cy="165" r="2.5"/>
+    <circle cx="634" cy="210" r="1.5"/>
+    <circle cx="760" cy="190" r="2"/>
+    <circle cx="88"  cy="310" r="1.5"/>
+    <circle cx="195" cy="355" r="2.5"/>
+    <circle cx="340" cy="290" r="1.5"/>
+    <circle cx="478" cy="340" r="2"/>
+    <circle cx="600" cy="310" r="1.5"/>
+    <circle cx="712" cy="280" r="2.5"/>
+    <circle cx="55"  cy="430" r="1.5"/>
+    <circle cx="178" cy="478" r="2"/>
+    <circle cx="295" cy="415" r="1.5"/>
+    <circle cx="423" cy="460" r="2.5"/>
+    <circle cx="545" cy="435" r="1.5"/>
+    <circle cx="668" cy="490" r="2"/>
+    <circle cx="775" cy="420" r="1.5"/>
+    <circle cx="120" cy="555" r="2.5"/>
+    <circle cx="380" cy="570" r="2"/>
+    <circle cx="640" cy="560" r="1.5"/>
+    <circle cx="750" cy="535" r="2"/>
   </g>
 
-  <!-- Stars — kleine weiße Punkte, manche mit Shadow-Offset -->
-  <g fill="white">
-    <circle cx="42"  cy="18"  r="1.5"/>
-    <circle cx="128" cy="55"  r="1.0"/>
-    <circle cx="89"  cy="140" r="1.8"/>
-    <circle cx="215" cy="28"  r="1.2"/>
-    <circle cx="310" cy="77"  r="1.5"/>
-    <circle cx="456" cy="12"  r="1.0"/>
-    <circle cx="589" cy="55"  r="1.8"/>
-    <circle cx="670" cy="130" r="1.2"/>
-    <circle cx="723" cy="44"  r="1.5"/>
-    <circle cx="150" cy="220" r="1.0"/>
-    <circle cx="267" cy="178" r="1.5"/>
-    <circle cx="390" cy="200" r="1.2"/>
-    <circle cx="512" cy="165" r="1.8"/>
-    <circle cx="634" cy="210" r="1.0"/>
-    <circle cx="760" cy="190" r="1.5"/>
-    <circle cx="88"  cy="310" r="1.0"/>
-    <circle cx="195" cy="355" r="1.8"/>
-    <circle cx="340" cy="290" r="1.2"/>
-    <circle cx="478" cy="340" r="1.5"/>
-    <circle cx="600" cy="310" r="1.0"/>
-    <circle cx="712" cy="280" r="1.8"/>
-    <circle cx="55"  cy="430" r="1.2"/>
-    <circle cx="178" cy="478" r="1.5"/>
-    <circle cx="295" cy="415" r="1.0"/>
-    <circle cx="423" cy="460" r="1.8"/>
-    <circle cx="545" cy="435" r="1.2"/>
-    <circle cx="668" cy="490" r="1.5"/>
-    <circle cx="775" cy="420" r="1.0"/>
-    <circle cx="120" cy="555" r="1.8"/>
-    <circle cx="380" cy="570" r="1.5"/>
-    <circle cx="640" cy="560" r="1.2"/>
-    <circle cx="750" cy="535" r="1.0"/>
-  </g>
-
-  <!-- Bright stars mit Shadow-Offset — gleicher Stil wie die Game-Elemente -->
-  <g>
-    <!-- Shadow dann Stern -->
-    <circle cx="234" cy="98"  r="3" fill="#00ffe0" opacity="0.6"/>
-    <circle cx="230" cy="94"  r="3" fill="white"/>
-
-    <circle cx="624" cy="163" r="3.5" fill="#cc0033" opacity="0.6"/>
-    <circle cx="620" cy="159" r="3.5" fill="white"/>
-
-    <circle cx="72"  cy="396" r="2.5" fill="#00ffe0" opacity="0.5"/>
-    <circle cx="68"  cy="392" r="2.5" fill="white"/>
-
-    <circle cx="747" cy="322" r="3" fill="#cc0033" opacity="0.5"/>
-    <circle cx="743" cy="318" r="3" fill="white"/>
-
-    <circle cx="384" cy="524" r="2.5" fill="#00ffe0" opacity="0.5"/>
-    <circle cx="380" cy="520" r="2.5" fill="white"/>
+  <!-- Helle Sterne — etwas deutlicher -->
+  <g fill="#000000" opacity="0.4">
+    <circle cx="230" cy="94"  r="3"/>
+    <circle cx="620" cy="159" r="3.5"/>
+    <circle cx="68"  cy="392" r="2.5"/>
+    <circle cx="743" cy="318" r="3"/>
+    <circle cx="380" cy="520" r="2.5"/>
   </g>
 </svg>

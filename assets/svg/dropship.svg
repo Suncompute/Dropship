@@ -1,47 +1,26 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130 170" width="130" height="170">
-  <!-- Shadow layer — gleiche Form, 6px versetzt, cyan -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 130" width="100" height="130">
+  <!-- Sleek fighter — spitze Nase, geschwungene Flügel, zwei Triebwerke unten -->
   <path d="
-    M 66 10
-    L 74 46
-    L 98 78
-    L 94 106
-    L 86 114
-    L 86 136
-    L 74 140
-    L 66 136
-    L 58 140
-    L 46 136
-    L 46 114
-    L 38 106
-    L 34 78
-    L 58 46
-    Z
-  " fill="#00ffe0"/>
-
-  <!-- Engine shadow glow -->
-  <ellipse cx="49" cy="152" rx="10" ry="8" fill="#00ffe0"/>
-  <ellipse cx="83" cy="152" rx="10" ry="8" fill="#00ffe0"/>
-
-  <!-- Main black silhouette — exakt gleiche Form, nicht versetzt -->
-  <path d="
-    M 60 4
-    L 68 40
-    L 92 72
-    L 88 100
-    L 80 108
-    L 80 130
-    L 68 134
-    L 60 130
-    L 52 134
-    L 40 130
-    L 40 108
-    L 32 100
-    L 28 72
-    L 52 40
+    M 50 0
+    C 50 0, 58 30, 62 55
+    L 90 75
+    L 80 85
+    L 65 78
+    L 63 105
+    L 57 110
+    L 50 108
+    L 43 110
+    L 37 105
+    L 35 78
+    L 20 85
+    L 10 75
+    L 38 55
+    C 42 30, 50 0, 50 0
     Z
   " fill="#000000"/>
 
-  <!-- Engine nozzles — black -->
-  <ellipse cx="43" cy="146" rx="10" ry="8" fill="#000000"/>
-  <ellipse cx="77" cy="146" rx="10" ry="8" fill="#000000"/>
+  <!-- Linkes Triebwerk -->
+  <rect x="33" y="108" width="10" height="18" rx="4" fill="#000000"/>
+  <!-- Rechtes Triebwerk -->
+  <rect x="57" y="108" width="10" height="18" rx="4" fill="#000000"/>
 </svg>

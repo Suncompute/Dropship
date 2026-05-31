@@ -1,28 +1,28 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 160" width="120" height="160">
-  <defs>
-    <radialGradient id="thrusterL" cx="50%" cy="0%" r="100%">
-      <stop offset="0%"   stop-color="#ff8800" stop-opacity="1"/>
-      <stop offset="60%"  stop-color="#ff4400" stop-opacity="0.5"/>
-      <stop offset="100%" stop-color="#ff0000" stop-opacity="0"/>
-    </radialGradient>
-    <radialGradient id="thrusterR" cx="50%" cy="0%" r="100%">
-      <stop offset="0%"   stop-color="#ff8800" stop-opacity="1"/>
-      <stop offset="60%"  stop-color="#ff4400" stop-opacity="0.5"/>
-      <stop offset="100%" stop-color="#ff0000" stop-opacity="0"/>
-    </radialGradient>
-    <filter id="bloom">
-      <feGaussianBlur stdDeviation="6" result="b"/>
-      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
-    </filter>
-  </defs>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130 170" width="130" height="170">
+  <!-- Shadow layer — gleiche Form, 6px versetzt, cyan -->
+  <path d="
+    M 66 10
+    L 74 46
+    L 98 78
+    L 94 106
+    L 86 114
+    L 86 136
+    L 74 140
+    L 66 136
+    L 58 140
+    L 46 136
+    L 46 114
+    L 38 106
+    L 34 78
+    L 58 46
+    Z
+  " fill="#00ffe0"/>
 
-  <!-- Engine exhaust — flames shoot DOWN from below the hull -->
-  <ellipse cx="43" cy="148" rx="9"  ry="16" fill="url(#thrusterL)" filter="url(#bloom)"/>
-  <ellipse cx="77" cy="148" rx="9"  ry="16" fill="url(#thrusterR)" filter="url(#bloom)"/>
-  <ellipse cx="43" cy="140" rx="4"  ry="6"  fill="#ffe066" opacity="0.9"/>
-  <ellipse cx="77" cy="140" rx="4"  ry="6"  fill="#ffe066" opacity="0.9"/>
+  <!-- Engine shadow glow -->
+  <ellipse cx="49" cy="152" rx="10" ry="8" fill="#00ffe0"/>
+  <ellipse cx="83" cy="152" rx="10" ry="8" fill="#00ffe0"/>
 
-  <!-- Pure black silhouette — sleek fighter shape -->
+  <!-- Main black silhouette — exakt gleiche Form, nicht versetzt -->
   <path d="
     M 60 4
     L 68 40
@@ -41,9 +41,7 @@
     Z
   " fill="#000000"/>
 
-  <!-- Intake scoops — thin slivers of light on wing edges only -->
-  <line x1="52" y1="40" x2="28" y2="72"
-        stroke="#ff6600" stroke-width="1.2" opacity="0.5" filter="url(#bloom)"/>
-  <line x1="68" y1="40" x2="92" y2="72"
-        stroke="#ff6600" stroke-width="1.2" opacity="0.5" filter="url(#bloom)"/>
+  <!-- Engine nozzles — black -->
+  <ellipse cx="43" cy="146" rx="10" ry="8" fill="#000000"/>
+  <ellipse cx="77" cy="146" rx="10" ry="8" fill="#000000"/>
 </svg>

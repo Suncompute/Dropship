@@ -1,0 +1,47 @@
+{
+  "nodes": [
+    {
+      "id": "ws_title",
+      "type": "text",
+      "text": "# unknown\n",
+      "x": -200,
+      "y": -300,
+      "width": 480,
+      "height": 80,
+      "color": "6"
+    },
+    {
+      "id": "pkg_dropship_wasm",
+      "type": "text",
+      "text": "**dropship-wasm**\n─────────────\nL3 — WASM / Browser\nWASM Entry-Point, WebGL Adapter, Browser Glue",
+      "x": -200,
+      "y": -160,
+      "width": 480,
+      "height": 160,
+      "color": "2"
+    },
+    {
+      "id": "pkg_dropship_ports",
+      "type": "text",
+      "text": "**dropship-ports**\n─────────────\nL2 — Ports & Adapters\nPort Traits (Renderer, Input, Audio, ...)",
+      "x": -200,
+      "y": 80,
+      "width": 480,
+      "height": 160,
+      "color": "5"
+    },
+    {
+      "id": "pkg_dropship_core",
+      "type": "text",
+      "text": "**dropship-core**\n─────────────\nL1 — Domain Logic\nDomain Entities, Game Logic, Business Rules",
+      "x": -200,
+      "y": 320,
+      "width": 480,
+      "height": 160,
+      "color": "4"
+    }
+  ],
+  "edges": [
+    
+  ]
+}

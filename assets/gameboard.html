@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Dropship — Gameboard</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #020208;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      overflow: hidden;
+      user-select: none;
+    }
+    canvas {
+      display: block;
+      border: 1px solid #2d1b69;
+      box-shadow:
+        0 0 0 1px #1a0a3a,
+        0 0 60px rgba(91, 33, 182, 0.35);
+    }
+    #hint {
+      margin-top: 10px;
+      font: 10px 'Courier New', monospace;
+      letter-spacing: 3px;
+      color: #3b1f6b;
+    }
+  </style>
+</head>
+<body>
+<canvas id="c" width="800" height="600"></canvas>
+<p id="hint">WASD / ARROWS — MOVE &nbsp;·&nbsp; SPACE — FIRE</p>
+<script>
+'use strict';
+
+const cv = document.getElementById('c');
+const cx = cv.getContext('2d');
+const W = 800, H = 600;
+
+/* ── Palette ───────────────────────────────────────────────────────────────── */
+const V    = '#7c3aed';   // violet
+const VDIM = '#4c1d95';
+const LAV  = '#c4b5fd';   // lavender
+const FL   = '#38bdf8';   // flame blue
+const FLC  = '#e0f2fe';   // flame core
+const BUL  = '#7dd3fc';   // player bullet
+const EBUL = '#f87171';   // enemy bullet
+const EGLOW= '#dc2626';   // eye / danger
+const EYEW = '#fce7e7';   // eye white
+const HUD  = '#a78bfa';
+const HUDD = '#6d28d9';
+
+/* ── Input ─────────────────────────────────────────────────────────────────── */
+const K = {};
+addEventListener('keydown', e => {
+  K[e.code] = true;
+  if (/^(Arrow|Space)/.test(e.code)) e.preventDefault();
+  if (e.code === 'Space' && gs !== 'play') startGame();
+});
+addEventListener('keyup', e => { K[e.code] = false; });
+
+/* ── Game state ────────────────────────────────────────────────────────────── */
+let gs = 'title';   // 'title' | 'play' | 'win' | 'lose'
+let score, lives, t, lshot, shake;
+let ship, planet, buls, ebuls, parts;
+
+/* ── Stars (static) ────────────────────────────────────────────────────────── */
+const STARS = Array.from({ length: 72 }, () => ({
+  x: Math.random() * W,
+  y: Math.random() * H,
+  r: Math.random() * 1.2 + 0.3,
+  a: Math.random() * 0.55 + 0.18,
+  f: Math.random() * 0.02 + 0.005,
+  p: Math.random() * Math.PI * 2,
+  b: Math.random() < 0.09,
+}));
+
+/* ── Init / restart ─────────────────────────────────────────────────────────── */
+function startGame() {
+  gs = 'play'; score = 0; lives = 3; t = 0; lshot = 0; shake = 0;
+  ship   = { x: W / 2, y: H - 90, inv: 0, ft: 0 };
+  planet = { x: W / 2, y: 150, mt: 0, ra: 0, hp: 100, lshot: 0, flash: 0 };
+  buls = []; ebuls = []; parts = [];
+}
+
+/* ── Ship path (100 × 128 coordinate space, centered at 50,62) ─────────────── */
+function shipPath() {
+  cx.beginPath();
+  cx.moveTo(50, 0);
+  cx.bezierCurveTo(50, 0, 58, 30, 62, 55);
+  cx.lineTo(90, 75);  cx.lineTo(80, 85);  cx.lineTo(65, 78);
+  cx.lineTo(63, 105); cx.lineTo(57, 110); cx.lineTo(50, 108);
+  cx.lineTo(43, 110); cx.lineTo(37, 105); cx.lineTo(35, 78);
+  cx.lineTo(20, 85);  cx.lineTo(10, 75);  cx.lineTo(38, 55);
+  cx.bezierCurveTo(42, 30, 50, 0, 50, 0);
+  cx.closePath();
+}
+
+/* ── Draw: background ───────────────────────────────────────────────────────── */
+function drawBG() {
+  let g = cx.createRadialGradient(W * .5, H * .4, 0, W * .5, H * .4, W * .7);
+  g.addColorStop(0, '#0d0820'); g.addColorStop(1, '#050510');
+  cx.fillStyle = g; cx.fillRect(0, 0, W, H);
+
+  g = cx.createRadialGradient(W * .24, H * .27, 0, W * .24, H * .27, W * .4);
+  g.addColorStop(0, 'rgba(59,7,100,.26)'); g.addColorStop(1, 'rgba(5,5,16,0)');
+  cx.fillStyle = g; cx.fillRect(0, 0, W, H);
+
+  g = cx.createRadialGradient(W * .78, H * .68, 0, W * .78, H * .68, W * .32);
+  g.addColorStop(0, 'rgba(30,27,75,.18)'); g.addColorStop(1, 'rgba(5,5,16,0)');
+  cx.fillStyle = g; cx.fillRect(0, 0, W, H);
+}
+
+/* ── Draw: stars ────────────────────────────────────────────────────────────── */
+function drawStars() {
+  for (const s of STARS) {
+    cx.globalAlpha = s.a + Math.sin(t * s.f * 60 + s.p) * 0.13;
+    cx.fillStyle = s.b ? FLC : '#fff';
+    cx.beginPath(); cx.arc(s.x, s.y, s.r, 0, Math.PI * 2); cx.fill();
+  }
+  cx.globalAlpha = 1;
+}
+
+/* ── Draw: player ship ──────────────────────────────────────────────────────── */
+function drawShip() {
+  const { x, y, inv, ft } = ship;
+  if (inv > 0 && Math.floor(inv * 12) % 2 === 0) return;
+
+  cx.save();
+  cx.translate(x, y);
+  const sc = 0.36;
+  cx.scale(sc, sc);
+  cx.translate(-50, -62);
+
+  /* engine flames */
+  const fw = 0.82 + Math.sin(ft * 14) * 0.18;
+  for (const [ex, ey] of [[38, 134], [62, 134]]) {
+    cx.save();
+    cx.translate(ex, ey);
+    cx.scale(1, fw);
+    cx.shadowBlur = 16; cx.shadowColor = FL; cx.fillStyle = FL; cx.globalAlpha = 0.7;
+    cx.beginPath(); cx.ellipse(0, 0, 4.5, 10, 0, 0, Math.PI * 2); cx.fill();
+    cx.fillStyle = FLC; cx.globalAlpha = 0.88; cx.shadowBlur = 6;
+    cx.beginPath(); cx.ellipse(0, -3, 2, 4.5, 0, 0, Math.PI * 2); cx.fill();
+    cx.restore();
+  }
+
+  /* body glow + fill */
+  cx.shadowBlur = 18; cx.shadowColor = V; cx.fillStyle = '#fff';
+  shipPath(); cx.fill(); cx.shadowBlur = 0;
+
+  /* engine housings */
+  cx.fillStyle = '#e2e8f0';
+  for (const ex of [33, 57]) {
+    cx.beginPath();
+    cx.roundRect(ex, 108, 10, 18, 4);
+    cx.fill();
+  }
+  cx.restore();
+}
+
+/* ── Draw: hostile planet ───────────────────────────────────────────────────── */
+const PR = 58; // planet radius
+
+function drawPlanet() {
+  const { x, y, ra, hp, flash } = planet;
+  const pf = hp / 100;
+  cx.save(); cx.translate(x, y);
+
+  /* body */
+  const grad = cx.createRadialGradient(-18, -18, 0, 0, 0, PR);
+  grad.addColorStop(0, flash > 0.3 ? '#3a0a54' : '#1a0a2e');
+  grad.addColorStop(0.7, '#0a0618');
+  grad.addColorStop(1,   '#060412');
+  cx.shadowBlur = 24; cx.shadowColor = '#3b0764';
+  cx.fillStyle = grad;
+  cx.beginPath(); cx.arc(0, 0, PR, 0, Math.PI * 2); cx.fill();
+  cx.shadowBlur = 0;
+
+  /* surface detail ring */
+  cx.strokeStyle = '#2d1b69'; cx.lineWidth = 0.7; cx.globalAlpha = 0.28;
+  cx.beginPath(); cx.arc(0, 0, PR * 0.78, 0, Math.PI * 2); cx.stroke();
+  cx.globalAlpha = 1;
+
+  /* orbital ring */
+  const shieldOn = hp > 50;
+  cx.save(); cx.rotate(ra);
+  if (shieldOn) {
+    const sf = (hp - 50) / 50;
+    cx.shadowBlur = 10 + 5 * Math.sin(t * 3.5); cx.shadowColor = V;
+    cx.strokeStyle = V; cx.lineWidth = 2.8; cx.globalAlpha = 0.45 + sf * 0.55;
+  } else {
+    /* broken ring — ghost flicker */
+    cx.strokeStyle = VDIM; cx.lineWidth = 1;
+    cx.globalAlpha = Math.max(0, 0.12 + 0.08 * Math.sin(t * 9));
+    cx.setLineDash([6, 14]);
+  }
+  cx.beginPath(); cx.ellipse(0, 0, 78, 20, 0, 0, Math.PI * 2); cx.stroke();
+  cx.setLineDash([]); cx.restore();
+
+  /* eye threat glow */
+  const ei = shieldOn ? 0.11 : 0.26 + (1 - pf) * 0.5;
+  cx.shadowBlur = 20; cx.shadowColor = EGLOW; cx.fillStyle = EGLOW;
+  cx.globalAlpha = ei;
+  cx.beginPath(); cx.ellipse(0, 0, 22, 10, 0, 0, Math.PI * 2); cx.fill();
+  cx.globalAlpha = 1; cx.shadowBlur = 0;
+
+  /* eye white */
+  cx.fillStyle = EYEW;
+  cx.beginPath(); cx.ellipse(0, 0, 14, 6, 0, 0, Math.PI * 2); cx.fill();
+
+  /* pupil — tracks ship */
+  const ang = Math.atan2(ship.y - y, ship.x - x);
+  const px = Math.cos(ang) * 4.5, py = Math.sin(ang) * 4.5;
+  cx.fillStyle = '#1a0000';
+  cx.beginPath(); cx.arc(px, py, 5, 0, Math.PI * 2); cx.fill();
+
+  /* glint */
+  cx.fillStyle = '#fff'; cx.globalAlpha = 0.6;
+  cx.beginPath(); cx.arc(px + 2, py - 1.5, 1.5, 0, Math.PI * 2); cx.fill();
+  cx.globalAlpha = 1;
+
+  cx.restore();
+}
+
+/* ── Draw: HUD ──────────────────────────────────────────────────────────────── */
+function drawHUD() {
+  /* lives — mini ship icons */
+  for (let i = 0; i < lives; i++) {
+    cx.save();
+    cx.translate(22 + i * 28, 20);
+    cx.scale(0.135, 0.135); cx.translate(-50, -62);
+    cx.shadowBlur = 7; cx.shadowColor = V; cx.fillStyle = LAV;
+    shipPath(); cx.fill();
+    cx.restore();
+  }
+
+  /* score */
+  cx.font = '12px "Courier New", monospace';
+  cx.textAlign = 'right';
+  cx.fillStyle = HUD; cx.shadowBlur = 6; cx.shadowColor = V;
+  cx.fillText(`SCORE  ${String(score).padStart(6, '0')}`, W - 14, 20);
+  cx.shadowBlur = 0; cx.textAlign = 'left';
+
+  /* planet HP bar */
+  const bx = (W - 180) / 2, by = 10, bw = 180, bh = 6;
+  cx.fillStyle = '#12082a'; cx.fillRect(bx, by, bw, bh);
+  const barCol = planet.hp > 60 ? V : planet.hp > 30 ? '#d946ef' : EGLOW;
+  const fill   = (planet.hp / 100) * bw;
+  cx.fillStyle = barCol; cx.shadowBlur = 5; cx.shadowColor = barCol;
+  cx.fillRect(bx, by, Math.max(0, fill), bh);
+  cx.shadowBlur = 0;
+  cx.strokeStyle = '#2d1b69'; cx.lineWidth = 1;
+  cx.strokeRect(bx, by, bw, bh);
+
+  cx.font = '9px "Courier New", monospace'; cx.textAlign = 'center';
+  cx.fillStyle = HUDD;
+  cx.fillText('HOSTILE PLANET', W / 2, by + bh + 11);
+  cx.textAlign = 'left';
+
+  /* phase alert dots */
+  for (let i = 0; i < 3; i++) {
+    const lit = planet.hp <= [101, 60, 30][i];
+    cx.beginPath(); cx.arc(bx + bw + 9 + i * 10, by + 3, 2.5, 0, Math.PI * 2);
+    cx.fillStyle = lit ? EGLOW : '#2d1b69';
+    if (lit) { cx.shadowBlur = 6; cx.shadowColor = EGLOW; }
+    cx.fill(); cx.shadowBlur = 0;
+  }
+}
+
+/* ── Draw: particles ────────────────────────────────────────────────────────── */
+function drawParticles() {
+  for (const p of parts) {
+    const a = p.life / p.ml;
+    cx.globalAlpha = a;
+    cx.shadowBlur = 5; cx.shadowColor = p.c; cx.fillStyle = p.c;
+    cx.beginPath(); cx.arc(p.x, p.y, p.r * Math.sqrt(a), 0, Math.PI * 2); cx.fill();
+  }
+  cx.globalAlpha = 1; cx.shadowBlur = 0;
+}
+
+/* ── Draw: corner HUD brackets ──────────────────────────────────────────────── */
+function drawCorners() {
+  const m = 12, s = 18;
+  cx.strokeStyle = VDIM; cx.lineWidth = 1; cx.globalAlpha = 0.45;
+  for (const [ox, oy, sx, sy] of [[m,m,1,1],[W-m,m,-1,1],[m,H-m,1,-1],[W-m,H-m,-1,-1]]) {
+    cx.beginPath();
+    cx.moveTo(ox + sx * s, oy); cx.lineTo(ox, oy); cx.lineTo(ox, oy + sy * s);
+    cx.stroke();
+  }
+  cx.globalAlpha = 1;
+}
+
+/* ── Draw: full-screen overlays ─────────────────────────────────────────────── */
+function drawOverlay(title, line1, line2 = '') {
+  cx.fillStyle = 'rgba(5,5,16,.82)'; cx.fillRect(0, 0, W, H);
+  cx.textAlign = 'center';
+
+  cx.font = '46px "Courier New", monospace';
+  cx.fillStyle = LAV; cx.shadowBlur = 22; cx.shadowColor = V;
+  cx.fillText('⬡  ' + title, W / 2, H / 2 - 38);
+
+  cx.font = '12px "Courier New", monospace';
+  cx.fillStyle = HUD; cx.shadowBlur = 8; cx.shadowColor = V;
+  cx.fillText(line1, W / 2, H / 2 + 12);
+
+  if (line2) {
+    cx.fillStyle = HUDD; cx.shadowBlur = 4;
+    cx.fillText(line2, W / 2, H / 2 + 36);
+  }
+
+  /* blinking SPACE prompt */
+  if (Math.floor(t * 2) % 2 === 0) {
+    cx.fillStyle = VDIM;
+    cx.fillText('PRESS  SPACE', W / 2, H / 2 + 68);
+  }
+
+  cx.shadowBlur = 0; cx.textAlign = 'left';
+}
+
+/* ── Helpers ────────────────────────────────────────────────────────────────── */
+function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+
+function spark(x, y, color, count = 7) {
+  for (let i = 0; i < count; i++) {
+    parts.push({
+      x, y,
+      vx: (Math.random() - 0.5) * 220,
+      vy: (Math.random() - 0.5) * 220,
+      life: 0.4 + Math.random() * 0.3,
+      ml: 0.7,
+      r:  Math.random() * 2 + 0.8,
+      c:  color,
+    });
+  }
+}
+
+function ringBurst(px, py) {
+  /* ring shatters when shield breaks */
+  for (let i = 0; i < 24; i++) {
+    const a = (i / 24) * Math.PI * 2;
+    parts.push({
+      x: px + Math.cos(a) * 78, y: py + Math.sin(a) * 20,
+      vx: Math.cos(a) * 70 + (Math.random() - 0.5) * 50,
+      vy: Math.sin(a) * 35 + (Math.random() - 0.5) * 35,
+      life: 0.9, ml: 0.9, r: 2.2, c: V,
+    });
+  }
+}
+
+function victoryBurst() {
+  for (let i = 0; i < 55; i++) {
+    parts.push({
+      x: planet.x + (Math.random() - 0.5) * 40,
+      y: planet.y + (Math.random() - 0.5) * 40,
+      vx: (Math.random() - 0.5) * 360,
+      vy: (Math.random() - 0.5) * 360,
+      life: Math.random() * 1.2 + 0.5,
+      ml: 1.7, r: Math.random() * 5 + 1.5,
+      c: [V, FL, EGLOW, '#fff'][Math.floor(Math.random() * 4)],
+    });
+  }
+}
+
+/* ── Update ─────────────────────────────────────────────────────────────────── */
+function update(dt) {
+  t += dt;
+  shake = Math.max(0, shake - dt * 75);
+
+  /* --- ship movement --- */
+  let dx = 0, dy = 0;
+  if (K.ArrowLeft  || K.KeyA) dx -= 1;
+  if (K.ArrowRight || K.KeyD) dx += 1;
+  if (K.ArrowUp    || K.KeyW) dy -= 1;
+  if (K.ArrowDown  || K.KeyS) dy += 1;
+  if (dx && dy) { dx *= 0.707; dy *= 0.707; }
+
+  ship.x = clamp(ship.x + dx * 245 * dt, 22, W - 22);
+  ship.y = clamp(ship.y + dy * 245 * dt, 55, H - 28);
+  ship.inv = Math.max(0, ship.inv - dt);
+  ship.ft += dt;
+
+  /* --- fire --- */
+  if ((K.Space || K.KeyZ) && t - lshot > 0.165) {
+    lshot = t;
+    buls.push({ x: ship.x, y: ship.y - 22 });
+  }
+
+  /* --- planet movement --- */
+  const pf   = planet.hp / 100;
+  const amp  = 108 + (1 - pf) * 72;
+  const spd  = 0.5  + (1 - pf) * 1.9;
+  planet.mt += dt * spd;
+
+  if (planet.hp > 50) {
+    planet.x = W / 2 + Math.sin(planet.mt) * amp;
+    planet.y = 148    + Math.sin(planet.mt * 0.55) * 24;
+  } else {
+    /* figure-eight (more threatening) */
+    planet.x = W / 2 + Math.sin(planet.mt) * amp;
+    planet.y = 152    + Math.sin(planet.mt * 2.1)  * 56;
+  }
+  planet.x = clamp(planet.x, 90, W - 90);
+  planet.y = clamp(planet.y, 72, 268);
+
+  planet.ra    += dt * (0.9 + (1 - pf) * 0.9);
+  planet.flash  = Math.max(0, planet.flash - dt * 9);
+
+  /* --- planet fires --- */
+  const fireRate = planet.hp > 60 ? 2.3 : planet.hp > 30 ? 1.25 : 0.68;
+  if (t - planet.lshot > fireRate) {
+    planet.lshot = t;
+    const ang  = Math.atan2(ship.y - planet.y, ship.x - planet.x);
+    const spd2 = 158 + (1 - pf) * 100;
+    const spread = planet.hp > 60 ? [0] : planet.hp > 30 ? [-0.14, 0, 0.14] : [-0.28, -0.1, 0, 0.1, 0.28];
+    for (const da of spread)
+      ebuls.push({ x: planet.x, y: planet.y, vx: Math.cos(ang + da) * spd2, vy: Math.sin(ang + da) * spd2 });
+  }
+
+  /* --- player bullets --- */
+  const prevHp = planet.hp;
+
+  for (let i = buls.length - 1; i >= 0; i--) {
+    const b = buls[i];
+    b.y -= 525 * dt;
+    if (b.y < -12) { buls.splice(i, 1); continue; }
+
+    const dist = Math.hypot(b.x - planet.x, b.y - planet.y);
+    const hitR = planet.hp > 50 ? PR + 24 : PR; // ring zone when shielded
+    if (dist < hitR) {
+      buls.splice(i, 1);
+      const dmg = planet.hp > 50 ? 3.5 : 6;
+      planet.hp = Math.max(0, planet.hp - dmg);
+      planet.flash = 1;
+      score += planet.hp > 50 ? 10 : 22;
+      spark(b.x, b.y, planet.hp <= 50 ? EGLOW : V, 7);
+
+      if (planet.hp <= 0) {
+        gs = 'win'; score += 1000;
+        victoryBurst();
+        return;
+      }
+    }
+  }
+
+  /* shield-break event */
+  if (prevHp > 50 && planet.hp <= 50) {
+    ringBurst(planet.x, planet.y);
+    shake = 6;
+  }
+
+  /* --- enemy bullets --- */
+  for (let i = ebuls.length - 1; i >= 0; i--) {
+    const b = ebuls[i];
+    b.x += b.vx * dt; b.y += b.vy * dt;
+    if (b.x < -20 || b.x > W + 20 || b.y < -20 || b.y > H + 20) { ebuls.splice(i, 1); continue; }
+    if (ship.inv <= 0 && Math.hypot(b.x - ship.x, b.y - ship.y + 5) < 16) {
+      ebuls.splice(i, 1);
+      lives--;
+      ship.inv = 2.6;
+      shake = 9;
+      spark(ship.x, ship.y, FL, 14);
+      if (lives <= 0) { gs = 'lose'; return; }
+    }
+  }
+
+  /* --- particles --- */
+  for (let i = parts.length - 1; i >= 0; i--) {
+    const p = parts[i];
+    p.x += p.vx * dt; p.y += p.vy * dt;
+    p.vx *= 0.87; p.vy *= 0.87;
+    p.life -= dt;
+    if (p.life <= 0) parts.splice(i, 1);
+  }
+}
+
+/* ── Main loop ──────────────────────────────────────────────────────────────── */
+let last = 0;
+
+function loop(ts) {
+  const dt = Math.min((ts - last) / 1000, 0.05);
+  last = ts;
+  if (gs === 'play') update(dt);
+  else t += dt; // keep t ticking for blink animations
+
+  /* clear */
+  cx.clearRect(0, 0, W, H);
+
+  /* screen shake */
+  cx.save();
+  if (shake > 0) cx.translate((Math.random() - 0.5) * shake, (Math.random() - 0.5) * shake);
+
+  drawBG();
+  drawStars();
+
+  if (gs !== 'title') {
+    drawParticles();
+
+    /* bullets */
+    for (const b of buls) {
+      cx.shadowBlur = 8; cx.shadowColor = BUL; cx.fillStyle = BUL;
+      cx.beginPath(); cx.ellipse(b.x, b.y, 2, 5, 0, 0, Math.PI * 2); cx.fill();
+    }
+    for (const b of ebuls) {
+      cx.shadowBlur = 8; cx.shadowColor = EBUL; cx.fillStyle = EBUL;
+      cx.beginPath(); cx.arc(b.x, b.y, 4, 0, Math.PI * 2); cx.fill();
+    }
+    cx.shadowBlur = 0;
+
+    if (gs === 'play' || gs === 'lose') drawPlanet();
+    drawShip();
+    drawHUD();
+  }
+
+  drawCorners();
+  cx.restore();
+
+  /* overlays */
+  if (gs === 'title')
+    drawOverlay('DROPSHIP', 'HUNT THE HOSTILE PLANET BEFORE IT AWAKENS');
+  else if (gs === 'win')
+    drawOverlay('MISSION COMPLETE', `FINAL SCORE  ${String(score).padStart(6, '0')}`, 'TARGET ELIMINATED');
+  else if (gs === 'lose')
+    drawOverlay('SIGNAL LOST', `FINAL SCORE  ${String(score).padStart(6, '0')}`, 'SHIP DESTROYED');
+
+  requestAnimationFrame(loop);
+}
+
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>

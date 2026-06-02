@@ -4,66 +4,191 @@
   <meta charset="utf-8">
   <title>Dropship — Asset Preview</title>
   <style>
-    body { background: #ffffff; margin: 0; font-family: monospace; color: #000; }
-    h1 { color: #00e5ff; text-align: center; padding: 20px; font-size: 1.4em; letter-spacing: 4px; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #050510;
+      font-family: 'Courier New', Monaco, monospace;
+      color: #7c3aed;
+    }
+
+    header {
+      text-align: center;
+      padding: 32px 20px 8px;
+    }
+
+    h1 {
+      font-size: 1.7em;
+      letter-spacing: 10px;
+      color: #c4b5fd;
+      text-shadow:
+        0 0 8px #7c3aed,
+        0 0 24px #5b21b6,
+        0 0 55px #3b0764;
+    }
+
+    .subtitle {
+      font-size: 0.58em;
+      letter-spacing: 7px;
+      color: #3b0764;
+      margin-top: 6px;
+    }
+
+    /* ── Scene ── */
+
+    .scene-wrap {
+      width: 800px;
+      margin: 24px auto 0;
+    }
+
     .scene {
       position: relative;
-      width: 800px; height: 600px;
-      margin: 0 auto;
-      border: 1px solid #1a1a3a;
+      width: 800px;
+      height: 600px;
       overflow: hidden;
+      border: 1px solid #2d1b69;
+      box-shadow:
+        0 0 0 1px #1a0a3a,
+        0 0 40px rgba(91, 33, 182, 0.25),
+        inset 0 0 80px rgba(5, 5, 16, 0.6);
     }
-    .scene img.bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
-    .scene img.planet { position: absolute; top: 60px; right: 80px; }
+
+    /* CRT scanlines */
+    .scene::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0, 0, 0, 0.1) 2px,
+        rgba(0, 0, 0, 0.1) 4px
+      );
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    /* Vignette */
+    .scene::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(
+        ellipse at center,
+        transparent 45%,
+        rgba(5, 5, 16, 0.65) 100%
+      );
+      pointer-events: none;
+      z-index: 9;
+    }
+
+    .scene img.bg   { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+    .scene img.planet { position: absolute; top: 55px; right: 75px; }
     .scene img.ship {
       position: absolute;
-      bottom: 100px; left: 50%;
+      bottom: 95px; left: 50%;
       transform: translateX(-50%);
-      animation: hover 3s ease-in-out infinite;
+      animation: drift 3.5s ease-in-out infinite;
     }
-    @keyframes hover {
+
+    @keyframes drift {
       0%, 100% { transform: translateX(-50%) translateY(0px); }
-      50%       { transform: translateX(-50%) translateY(-8px); }
+      50%       { transform: translateX(-50%) translateY(-10px); }
     }
+
     .label {
-      position: absolute; font-size: 10px;
-      letter-spacing: 2px; color: #00e5ff88;
+      position: absolute;
+      font-size: 9px;
+      letter-spacing: 3px;
+      color: #6d28d9;
+      text-shadow: 0 0 6px #4c1d95;
+      z-index: 11;
     }
-    .label.ship-label { bottom: 80px; left: 50%; transform: translateX(-50%); }
-    .label.planet-label { top: 40px; right: 80px; }
+    .label.ship-label   { bottom: 72px; left: 50%; transform: translateX(-50%); white-space: nowrap; }
+    .label.planet-label { top: 34px;   right: 75px; white-space: nowrap; }
+
+    /* Corner brackets */
+    .corner {
+      position: absolute;
+      width: 18px; height: 18px;
+      border-color: #4c1d95;
+      border-style: solid;
+      opacity: 0.7;
+      z-index: 11;
+    }
+    .corner.tl { top: 10px;    left: 10px;    border-width: 1px 0 0 1px; }
+    .corner.tr { top: 10px;    right: 10px;   border-width: 1px 1px 0 0; }
+    .corner.bl { bottom: 10px; left: 10px;    border-width: 0 0 1px 1px; }
+    .corner.br { bottom: 10px; right: 10px;   border-width: 0 1px 1px 0; }
+
+    /* ── Asset strip ── */
+
     .assets {
-      display: flex; gap: 40px;
-      justify-content: center; padding: 40px;
-      border-top: 1px solid #1a1a3a;
+      display: flex;
+      gap: 32px;
+      justify-content: center;
+      padding: 36px 40px;
+      border-top: 1px solid #1a0a3a;
+      background: #040410;
     }
-    .asset { text-align: center; }
-    .asset p { font-size: 11px; letter-spacing: 2px; color: #555; margin-top: 8px; }
+
+    .asset {
+      text-align: center;
+      padding: 20px 24px;
+      border: 1px solid #1a0a3a;
+      background: #07071a;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .asset:hover {
+      border-color: #4c1d95;
+      box-shadow: 0 0 18px rgba(91, 33, 182, 0.2);
+    }
+
+    .asset p {
+      font-size: 9px;
+      letter-spacing: 3px;
+      color: #3b1f6b;
+      margin-top: 14px;
+    }
   </style>
 </head>
 <body>
-  <h1>⬡ DROPSHIP</h1>
 
-  <div class="scene">
-    <img class="bg" src="svg/stars-bg.svg">
-    <img class="planet" src="svg/hostile-planet.svg" width="160">
-    <img class="ship" src="svg/dropship.svg" width="120">
-    <span class="label planet-label">HOSTILE PLANET</span>
-    <span class="label ship-label">DROPSHIP MK-I</span>
+  <header>
+    <h1>⬡ DROPSHIP</h1>
+    <p class="subtitle">MK-I TACTICAL FIGHTER</p>
+  </header>
+
+  <div class="scene-wrap">
+    <div class="scene">
+      <img class="bg"     src="svg/stars-bg.svg">
+      <img class="planet" src="svg/hostile-planet.svg" width="160">
+      <img class="ship"   src="svg/dropship.svg"       width="120">
+      <span class="label planet-label">HOSTILE PLANET</span>
+      <span class="label ship-label">DROPSHIP MK-I</span>
+      <div class="corner tl"></div>
+      <div class="corner tr"></div>
+      <div class="corner bl"></div>
+      <div class="corner br"></div>
+    </div>
   </div>
 
   <div class="assets">
     <div class="asset">
-      <img src="svg/dropship.svg" width="90">
+      <img src="svg/dropship.svg" width="80">
       <p>DROPSHIP.SVG</p>
     </div>
     <div class="asset">
-      <img src="svg/hostile-planet.svg" width="110">
+      <img src="svg/hostile-planet.svg" width="100">
       <p>HOSTILE-PLANET.SVG</p>
     </div>
-    <div class="asset" style="background:#060612; padding:10px; border:1px solid #111;">
-      <img src="svg/stars-bg.svg" width="200" height="150">
+    <div class="asset" style="background:#04040e; padding:10px 14px; border:1px solid #1a0a3a;">
+      <img src="svg/stars-bg.svg" width="200" height="150" style="display:block;">
       <p>STARS-BG.SVG</p>
     </div>
   </div>
+
 </body>
 </html>

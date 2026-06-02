@@ -1,49 +1,99 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600">
-  <!-- Weißer Hintergrund -->
-  <rect width="800" height="600" fill="#ffffff"/>
+  <defs>
+    <radialGradient id="void" cx="50%" cy="40%" r="65%">
+      <stop offset="0%"   stop-color="#0d0820"/>
+      <stop offset="100%" stop-color="#050510"/>
+    </radialGradient>
+    <radialGradient id="nebula1" cx="25%" cy="28%" r="38%">
+      <stop offset="0%"   stop-color="#3b0764" stop-opacity="0.28"/>
+      <stop offset="100%" stop-color="#050510" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="nebula2" cx="78%" cy="68%" r="32%">
+      <stop offset="0%"   stop-color="#1e1b4b" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#050510" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
 
-  <!-- Sterne — kleine schwarze Punkte -->
-  <g fill="#000000" opacity="0.15">
-    <circle cx="42"  cy="18"  r="2"/>
-    <circle cx="128" cy="55"  r="1.5"/>
-    <circle cx="89"  cy="140" r="2.5"/>
-    <circle cx="215" cy="28"  r="1.5"/>
-    <circle cx="310" cy="77"  r="2"/>
-    <circle cx="456" cy="12"  r="1.5"/>
-    <circle cx="589" cy="55"  r="2.5"/>
-    <circle cx="670" cy="130" r="1.5"/>
-    <circle cx="723" cy="44"  r="2"/>
-    <circle cx="150" cy="220" r="1.5"/>
-    <circle cx="267" cy="178" r="2"/>
-    <circle cx="390" cy="200" r="1.5"/>
-    <circle cx="512" cy="165" r="2.5"/>
-    <circle cx="634" cy="210" r="1.5"/>
-    <circle cx="760" cy="190" r="2"/>
-    <circle cx="88"  cy="310" r="1.5"/>
-    <circle cx="195" cy="355" r="2.5"/>
-    <circle cx="340" cy="290" r="1.5"/>
-    <circle cx="478" cy="340" r="2"/>
-    <circle cx="600" cy="310" r="1.5"/>
-    <circle cx="712" cy="280" r="2.5"/>
-    <circle cx="55"  cy="430" r="1.5"/>
-    <circle cx="178" cy="478" r="2"/>
-    <circle cx="295" cy="415" r="1.5"/>
-    <circle cx="423" cy="460" r="2.5"/>
-    <circle cx="545" cy="435" r="1.5"/>
-    <circle cx="668" cy="490" r="2"/>
-    <circle cx="775" cy="420" r="1.5"/>
-    <circle cx="120" cy="555" r="2.5"/>
-    <circle cx="380" cy="570" r="2"/>
-    <circle cx="640" cy="560" r="1.5"/>
-    <circle cx="750" cy="535" r="2"/>
+  <rect width="800" height="600" fill="url(#void)"/>
+  <rect width="800" height="600" fill="url(#nebula1)"/>
+  <rect width="800" height="600" fill="url(#nebula2)"/>
+
+  <!-- Dim background stars -->
+  <g fill="#ffffff" opacity="0.22">
+    <circle cx="42"  cy="18"  r="1"/>
+    <circle cx="128" cy="55"  r="1"/>
+    <circle cx="89"  cy="140" r="1.5"/>
+    <circle cx="215" cy="28"  r="1"/>
+    <circle cx="310" cy="77"  r="1"/>
+    <circle cx="456" cy="12"  r="1"/>
+    <circle cx="589" cy="55"  r="1.5"/>
+    <circle cx="670" cy="130" r="1"/>
+    <circle cx="723" cy="44"  r="1"/>
+    <circle cx="150" cy="220" r="1"/>
+    <circle cx="267" cy="178" r="1.5"/>
+    <circle cx="390" cy="200" r="1"/>
+    <circle cx="512" cy="165" r="1.5"/>
+    <circle cx="634" cy="210" r="1"/>
+    <circle cx="760" cy="190" r="1"/>
+    <circle cx="88"  cy="310" r="1"/>
+    <circle cx="195" cy="355" r="1.5"/>
+    <circle cx="340" cy="290" r="1"/>
+    <circle cx="478" cy="340" r="1"/>
+    <circle cx="600" cy="310" r="1"/>
+    <circle cx="712" cy="280" r="1.5"/>
+    <circle cx="55"  cy="430" r="1"/>
+    <circle cx="178" cy="478" r="1"/>
+    <circle cx="295" cy="415" r="1"/>
+    <circle cx="423" cy="460" r="1.5"/>
+    <circle cx="545" cy="435" r="1"/>
+    <circle cx="668" cy="490" r="1"/>
+    <circle cx="775" cy="420" r="1"/>
+    <circle cx="120" cy="555" r="1.5"/>
+    <circle cx="380" cy="570" r="1"/>
+    <circle cx="640" cy="560" r="1"/>
+    <circle cx="750" cy="535" r="1"/>
+    <circle cx="330" cy="44"  r="1"/>
+    <circle cx="490" cy="88"  r="1"/>
+    <circle cx="570" cy="260" r="1"/>
+    <circle cx="70"  cy="200" r="1"/>
+    <circle cx="160" cy="130" r="1"/>
+    <circle cx="440" cy="380" r="1"/>
+    <circle cx="720" cy="440" r="1"/>
+    <circle cx="250" cy="500" r="1"/>
+    <circle cx="600" cy="500" r="1"/>
+    <circle cx="352" cy="132" r="1"/>
+    <circle cx="487" cy="296" r="1"/>
+    <circle cx="33"  cy="500" r="1"/>
+    <circle cx="618" cy="380" r="1"/>
   </g>
 
-  <!-- Helle Sterne — etwas deutlicher -->
-  <g fill="#000000" opacity="0.4">
-    <circle cx="230" cy="94"  r="3"/>
-    <circle cx="620" cy="159" r="3.5"/>
-    <circle cx="68"  cy="392" r="2.5"/>
-    <circle cx="743" cy="318" r="3"/>
-    <circle cx="380" cy="520" r="2.5"/>
+  <!-- Medium stars -->
+  <g fill="#ffffff" opacity="0.55">
+    <circle cx="230" cy="94"  r="1.5"/>
+    <circle cx="68"  cy="392" r="1.5"/>
+    <circle cx="743" cy="318" r="1.5"/>
+    <circle cx="515" cy="78"  r="1.5"/>
+    <circle cx="142" cy="335" r="1.5"/>
+    <circle cx="695" cy="200" r="1.5"/>
+    <circle cx="280" cy="440" r="1.5"/>
+    <circle cx="440" cy="145" r="2"/>
+    <circle cx="380" cy="520" r="1.5"/>
+    <circle cx="690" cy="350" r="1.5"/>
+  </g>
+
+  <!-- Bright stars -->
+  <g fill="#ffffff" opacity="0.92">
+    <circle cx="620" cy="159" r="2.5"/>
+    <circle cx="155" cy="68"  r="2"/>
+    <circle cx="688" cy="410" r="2"/>
+    <circle cx="350" cy="310" r="1.5"/>
+    <circle cx="520" cy="40"  r="2"/>
+  </g>
+
+  <!-- Cold blue tinted stars -->
+  <g fill="#b8d4ff" opacity="0.75">
+    <circle cx="30"  cy="280" r="1.5"/>
+    <circle cx="760" cy="560" r="2"/>
+    <circle cx="400" cy="88"  r="1.5"/>
   </g>
 </svg>
